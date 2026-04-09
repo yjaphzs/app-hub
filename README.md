@@ -1,3 +1,5 @@
+<img width="6336" height="1584" alt="Github_Banner - Repository - App hub" src="https://github.com/user-attachments/assets/b90c6be9-3504-43c7-9d39-1f485f2b95a5" />
+
 # App Hub
 
 A centralized launcher for all my personal web apps, providing quick access to each project in one place. Built with **ReactJS** and styled using **shadcn/ui** components.
@@ -9,7 +11,7 @@ A centralized launcher for all my personal web apps, providing quick access to e
 ![shadcn/ui](https://img.shields.io/badge/Made%20with-shadcn/ui-111827?style=flat)
 
 **Live Demo:**  
-[https://apps.yjaphzs.xyz](https://apps.yjaphzs.xyz)
+[https://app-hub.yjaphzs.xyz](https://app-hub.yjaphzs.xyz)
 
 ## Features
 
@@ -61,7 +63,13 @@ This app is ready to deploy to GitHub Pages.
   [Motion (Framer Motion)](https://motion.dev/)
 
 - **Aurora Background:**  
-  [Aceternity UI](https://ui.aceternity.com/)
+  [shadcn.io](https://www.shadcn.io/background/aurora)
+
+## Screenshots
+<img width="1920" height="1079" alt="screencapture-app-hub-yjaphzs-xyz-2026-04-09-23_37_28" src="https://github.com/user-attachments/assets/a9ea9140-54d5-4426-b397-8908c3d89bb6" />
+
+<img width="1920" height="1079" alt="screencapture-app-hub-yjaphzs-xyz-2026-04-09-23_37_36" src="https://github.com/user-attachments/assets/6f8c1762-3369-4551-b2bc-afc051a0da85" />
+
 
 ## MIT License
 
