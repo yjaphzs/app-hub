@@ -6,9 +6,21 @@ import tailwindcss from "@tailwindcss/vite";
 // https://vite.dev/config/
 export default defineConfig({
     plugins: [react(), tailwindcss()],
+    build: {
+        outDir: "build",
+        minify: "esbuild",
+        rollupOptions: {
+            output: {
+                entryFileNames: `assets/[name]-[hash].js`,
+                chunkFileNames: `assets/[name]-[hash].js`,
+                assetFileNames: `assets/[name]-[hash].[ext]`,
+            },
+        },
+    },
     resolve: {
         alias: {
             "@": path.resolve(__dirname, "./src"),
         },
     },
+    base: "/",
 });
