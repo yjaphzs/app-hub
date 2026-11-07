@@ -1,17 +1,19 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react"
 
-type Theme = "dark" | "light" | "system"
+import type { ThemeMode } from "@/lib/appearance/preference"
+import { isThemeMode } from "@/lib/appearance/preference"
+import { THEME_KEY } from "@/lib/appearance/scheme-keys"
 
 type ThemeProviderProps = {
   children: React.ReactNode
-  defaultTheme?: Theme
+  defaultTheme?: ThemeMode
   storageKey?: string
 }
 
 type ThemeProviderState = {
-  theme: Theme
+  theme: ThemeMode
   resolvedTheme: "dark" | "light"
-  setTheme: (theme: Theme) => void
+  setTheme: (theme: ThemeMode) => void
 }
 
 const initialState: ThemeProviderState = {
@@ -22,22 +24,37 @@ const initialState: ThemeProviderState = {
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
 
+// The browser bar color: the page background in each mode.
+const THEME_COLORS = { light: "#ffffff", dark: "#111111" }
+
 function getSystemTheme(): "dark" | "light" {
   return window.matchMedia("(prefers-color-scheme: dark)").matches
     ? "dark"
     : "light"
 }
 
+function readStored(key: string, fallback: ThemeMode): ThemeMode {
+  try {
+    const stored = localStorage.getItem(key)
+    return isThemeMode(stored) ? stored : fallback
+  } catch {
+    return fallback
+  }
+}
+
+/** Light, dark, or the device's mode. The pre-paint script applies it before React loads. */
 export function ThemeProvider({
   children,
   defaultTheme = "system",
-  storageKey = "app-hub-theme",
+  storageKey = THEME_KEY,
   ...props
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(
-    () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
+  const [theme, setTheme] = useState<ThemeMode>(() =>
+    readStored(storageKey, defaultTheme)
   )
-  const [systemTheme, setSystemTheme] = useState<"dark" | "light">(getSystemTheme)
+  const [systemTheme, setSystemTheme] = useState<"dark" | "light">(
+    getSystemTheme
+  )
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-color-scheme: dark)")
@@ -53,14 +70,23 @@ export function ThemeProvider({
     const root = window.document.documentElement
     root.classList.remove("light", "dark")
     root.classList.add(resolvedTheme)
+    document
+      .querySelectorAll('meta[name="theme-color"]')
+      .forEach((meta) =>
+        meta.setAttribute("content", THEME_COLORS[resolvedTheme])
+      )
   }, [resolvedTheme])
 
   const value = useMemo<ThemeProviderState>(
     () => ({
       theme,
       resolvedTheme,
-      setTheme: (next: Theme) => {
-        localStorage.setItem(storageKey, next)
+      setTheme: (next: ThemeMode) => {
+        try {
+          localStorage.setItem(storageKey, next)
+        } catch {
+          /* private mode: the choice still applies for this visit */
+        }
         setTheme(next)
       },
     }),

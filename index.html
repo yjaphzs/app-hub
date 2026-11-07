@@ -1,68 +1,72 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <script>
-        (function() {
-            const appearance = '{{ $appearance ?? "system" }}';
-
-            if (appearance === 'system') {
-                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-                if (prefersDark) {
-                    document.documentElement.classList.add('dark');
-                }
-            }
-        })();
-    </script>
-    
+    <!-- vite.config.ts injects the light/dark and color-scheme script above this line. -->
     <style>
-        html {
-            background-color: oklch(1.0000 0 0);
-        }
-
-        html.dark {
-            background-color: oklch(0.1776 0 0);
-        }
+      html {
+        background-color: oklch(1 0 0);
+      }
+      html.dark {
+        background-color: oklch(0.1776 0 0);
+      }
     </style>
 
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
     <!-- SEO -->
-    <title>App Hub - JPB</title>
-    <meta name="description" content="A hub for all my web applications hosted on GitHub Pages." />
+    <title>App Hub: GWA Calculator, Expense Tracker, and more</title>
+    <meta
+      name="description"
+      content="Free web apps in one place: GWA Calculator for your grades and honors, and Expense Tracker for your money. No account needed to start."
+    />
     <meta name="author" content="Jan Bautista" />
-    <meta name="keywords" content="web applications, app hub, personal projects, GitHub Pages" />
     <meta name="creator" content="Jan Bautista" />
+    <meta name="keywords" content="GWA calculator, expense tracker, free web apps, app hub" />
     <meta name="robots" content="index, follow" />
     <meta name="googlebot" content="index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1" />
     <link rel="canonical" href="https://app-hub.yjaphzs.xyz/" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="App Hub - JPB" />
-    <meta property="og:description" content="A hub for all my web applications hosted on GitHub Pages." />
+    <meta property="og:title" content="App Hub: all my web apps, one tap away" />
+    <meta
+      property="og:description"
+      content="GWA Calculator and Expense Tracker, free in your browser. No account needed to start."
+    />
     <meta property="og:url" content="https://app-hub.yjaphzs.xyz/" />
     <meta property="og:site_name" content="App Hub" />
     <meta property="og:locale" content="en_US" />
     <meta property="og:image" content="https://app-hub.yjaphzs.xyz/og-image.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="App Hub - A hub for all my web applications hosted on GitHub Pages." />
+    <meta
+      property="og:image:alt"
+      content="App Hub, with phones showing GWA Calculator and Expense Tracker"
+    />
 
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="App Hub - A hub for all my web applications hosted on GitHub Pages." />
-    <meta name="twitter:description" content="A hub for all my web applications hosted on GitHub Pages." />
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="App Hub: all my web apps, one tap away" />
+    <meta
+      name="twitter:description"
+      content="GWA Calculator and Expense Tracker, free in your browser. No account needed to start."
+    />
     <meta name="twitter:image" content="https://app-hub.yjaphzs.xyz/og-image.jpg" />
+    <meta
+      name="twitter:image:alt"
+      content="App Hub, with phones showing GWA Calculator and Expense Tracker"
+    />
 
-    <!-- Favicon -->
+    <!-- Icons -->
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    <meta name="theme-color" content="#ffffff" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#111111" />
   </head>
   <body>
     <div id="root"></div>
