@@ -1,16 +1,12 @@
 import * as React from "react"
 import { Dialog as DialogPrimitive } from "radix-ui"
-import {
-  Loader2,
-  XIcon,
-  ZoomIn,
-  ZoomOut,
-  RotateCcw,
-} from "lucide-react"
+import { Loader2, XIcon, ZoomIn, ZoomOut, RotateCcw } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface ImageLightboxProps {
   images: string[]
+  /** Alt text per image; falls back to "{alt} {n}". */
+  alts?: string[]
   initialIndex: number
   alt?: string
   children: React.ReactNode
@@ -23,6 +19,7 @@ const WHEEL_ZOOM_STEP = 0.25
 
 export function ImageLightbox({
   images,
+  alts,
   initialIndex,
   alt = "Screenshot",
   children,
@@ -165,8 +162,14 @@ export function ImageLightbox({
     setIsDragging(false)
   }, [])
 
+  const swipeStartRef = React.useRef<{ x: number; y: number } | null>(null)
+
   const handleTouchStart = React.useCallback(
     (e: React.TouchEvent) => {
+      swipeStartRef.current =
+        zoom === MIN_ZOOM && e.touches.length === 1
+          ? { x: e.touches[0].clientX, y: e.touches[0].clientY }
+          : null
       if (zoom > MIN_ZOOM && e.touches.length === 1) {
         setIsDragging(true)
         dragStartRef.current = {
@@ -191,9 +194,20 @@ export function ImageLightbox({
     [isDragging, zoom]
   )
 
-  const handleTouchEnd = React.useCallback(() => {
-    setIsDragging(false)
-  }, [])
+  const handleTouchEnd = React.useCallback(
+    (e: React.TouchEvent) => {
+      setIsDragging(false)
+      const start = swipeStartRef.current
+      swipeStartRef.current = null
+      if (!start || total < 2) return
+      const dx = e.changedTouches[0].clientX - start.x
+      const dy = e.changedTouches[0].clientY - start.y
+      if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy) * 1.5) return
+      if (dx < 0) goNext()
+      else goPrev()
+    },
+    [total, goNext, goPrev]
+  )
 
   const clickOriginRef = React.useRef({ x: 0, y: 0 })
   const handleImageMouseDown = React.useCallback((e: React.MouseEvent) => {
@@ -227,12 +241,12 @@ export function ImageLightbox({
           onPointerDownOutside={() => setOpen(false)}
         >
           <DialogPrimitive.Title className="sr-only">
-            Image viewer — {alt}
+            Image viewer: {alt}
           </DialogPrimitive.Title>
 
           {/* Top bar */}
-          <div className="absolute left-0 right-0 top-0 z-10 flex items-center justify-between px-2 py-2 sm:px-4 sm:py-3">
-            <span className="select-none text-sm font-medium tabular-nums text-white/90">
+          <div className="absolute top-0 right-0 left-0 z-10 flex items-center justify-between px-2 pt-[max(0.5rem,env(safe-area-inset-top))] pb-2 sm:px-4 sm:py-3">
+            <span className="text-sm font-medium text-white/90 tabular-nums select-none">
               {currentIndex + 1} / {total}
             </span>
             <div className="flex items-center gap-1">
@@ -245,7 +259,7 @@ export function ImageLightbox({
               >
                 <ZoomOut className="h-5 w-5" />
               </button>
-              <span className="min-w-12 select-none text-center text-xs font-medium tabular-nums text-white/70">
+              <span className="min-w-12 text-center text-xs font-medium text-white/70 tabular-nums select-none">
                 {Math.round(zoom * 100)}%
               </span>
               <button
@@ -306,7 +320,7 @@ export function ImageLightbox({
             )}
             <img
               src={images[currentIndex]}
-              alt={`${alt} ${currentIndex + 1}`}
+              alt={alts?.[currentIndex] ?? `${alt} ${currentIndex + 1}`}
               className={cn(
                 "max-h-full rounded-lg shadow-2xl select-none",
                 zoom > MIN_ZOOM
@@ -332,7 +346,7 @@ export function ImageLightbox({
 
           {/* Bottom dots */}
           {total > 1 && (
-            <div className="absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 items-center gap-1.5 rounded-full bg-black/40 px-3 py-1.5">
+            <div className="absolute bottom-[max(0.75rem,env(safe-area-inset-bottom))] left-1/2 z-10 flex -translate-x-1/2 items-center gap-1.5 rounded-full bg-black/40 px-3 py-1.5">
               {images.map((_, idx) => (
                 <button
                   key={idx}
