@@ -45,6 +45,10 @@
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
   --radius: 0.625rem;
+  /* The logo (components/layout/brand-mark.tsx): accent glyph on a black tile.
+     Color schemes override these when the accent is too dark for black. */
+  --logo-tile: oklch(0 0 0);
+  --logo-mark: var(--primary);
 }
 
 .dark {

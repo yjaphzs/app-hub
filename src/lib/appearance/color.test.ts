@@ -11,6 +11,7 @@ import {
 import {
   deriveDark,
   deriveLight,
+  GRAPHIC_CONTRAST,
   TEXT_CONTRAST,
   type ModeTokens,
 } from "./derive-scheme"
@@ -88,6 +89,24 @@ describe("derived schemes stay readable", () => {
     }
   )
 
+  it.each(seeds)(
+    "$name: the logo glyph shows on its tile in both modes",
+    ({ light, dark }) => {
+      for (const t of [deriveLight(light), deriveDark(dark)]) {
+        const [tile, mark] = t.logoOnAccent
+          ? [t.primary, fg(t)]
+          : [BLACK, t.primary]
+        expect(contrast(tile, mark)).toBeGreaterThanOrEqual(GRAPHIC_CONTRAST)
+      }
+    }
+  )
+
+  it("puts the Black scheme's light logo on an accent tile", () => {
+    const black = SCHEME_PRESETS.find((s) => s.id === "black")!
+    expect(deriveLight(black.light).logoOnAccent).toBe(true)
+    expect(deriveDark(black.dark).logoOnAccent).toBe(false)
+  })
+
   it("keeps hues close to what was picked", () => {
     const pink = deriveLight(hexToOklch("#ec4899")!)
     expect(Math.abs(pink.primary.h - 354.3)).toBeLessThan(2)
@@ -116,6 +135,8 @@ describe("scheme CSS", () => {
       "--chart-1:",
       "--chart-5:",
       "--sidebar-primary:",
+      "--logo-tile:",
+      "--logo-mark:",
     ]) {
       expect(css.split(token)).toHaveLength(3)
     }

@@ -1,5 +1,5 @@
-import appHubLogo from "@/assets/images/app-hub.jpg"
 import { AppearanceButton } from "@/components/appearance/appearance-button"
+import { BrandMark } from "@/components/layout/brand-mark"
 
 /** Sticky top bar, like the apps': the brand on the left, Appearance on the right. */
 export function SiteHeader() {
@@ -10,13 +10,9 @@ export function SiteHeader() {
           href="/"
           className="flex min-w-0 items-center gap-2 rounded-md outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
         >
-          <img
-            src={appHubLogo}
-            alt=""
-            width={32}
-            height={32}
-            className="size-8 shrink-0 rounded-md"
-          />
+          <span className="flex size-8 shrink-0 overflow-hidden rounded-md">
+            <BrandMark />
+          </span>
           <span className="truncate text-base font-extrabold tracking-tight sm:text-xl">
             App Hub
           </span>
