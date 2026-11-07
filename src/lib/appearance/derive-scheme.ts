@@ -14,10 +14,18 @@ export interface ModeTokens {
   foreground: "black" | "white"
   /** chart-1 (lightest) … chart-5 (= primary). */
   chart: Oklch[]
+  /**
+   * The logo is an accent glyph on a black tile. When the accent is too dark
+   * to show on black (the Black scheme in light mode), the tile takes the
+   * accent and the glyph takes the button text color instead.
+   */
+  logoOnAccent: boolean
 }
 
 // Body text on a button: WCAG AA for normal-size text.
 export const TEXT_CONTRAST = 4.5
+// A logo glyph against its tile: WCAG AA for graphics.
+export const GRAPHIC_CONTRAST = 3
 const clamp = (v: number, min: number, max: number) =>
   Math.min(max, Math.max(min, v))
 const at = (base: Oklch, l: number): Oklch =>
@@ -60,6 +68,7 @@ export function deriveLight(seed: Oklch): ModeTokens {
     primary,
     foreground: white || !black ? "white" : "black",
     chart: chartRamp(primary),
+    logoOnAccent: contrast(primary, BLACK) < GRAPHIC_CONTRAST,
   }
 }
 
@@ -79,6 +88,7 @@ export function deriveDark(seed: Oklch): ModeTokens {
     primary,
     foreground: black ? "black" : "white",
     chart: chartRamp(primary),
+    logoOnAccent: contrast(primary, BLACK) < GRAPHIC_CONTRAST,
   }
 }
 
@@ -92,6 +102,8 @@ function declarations(tokens: ModeTokens): string {
     `--sidebar-primary-foreground: ${fg}`,
     `--ring: ${primary}`,
     ...tokens.chart.map((c, i) => `--chart-${i + 1}: ${formatOklch(c)}`),
+    `--logo-tile: ${tokens.logoOnAccent ? primary : "oklch(0 0 0)"}`,
+    `--logo-mark: ${tokens.logoOnAccent ? fg : primary}`,
   ].join("; ")
 }
 

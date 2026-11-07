@@ -57,6 +57,9 @@ Ported from the apps (`src/lib/appearance/`), saved on this device only:
   checks (`color.test.ts`). Amber is the default and lives in `index.css`.
 - `scheme-store.ts` applies a scheme (a `<style>` plus `data-scheme` on `<html>`), recolors the
   tab icon (`favicon.ts`), and saves it under the `app_hub_scheme*` keys.
+- The header logo is an SVG (`components/layout/brand-mark.tsx`) colored by `--logo-tile` and
+  `--logo-mark`: the accent on black, swapped when the accent is too dark for black (Black in
+  light mode). Keep its paths in step with `favicon.ts`.
 - Light/dark/system lives in `components/theme-provider.tsx` (key `app-hub-theme`).
 - `prepaint-script.ts` restores both before the first paint. `vite.config.ts` injects it at the
   top of `<head>`, so nothing flashes. Keep it in step with the keys in `scheme-keys.ts`
